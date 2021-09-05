@@ -1,6 +1,5 @@
 part of 'pages.dart';
 
-
 class _CustomMaterialPage<T> extends MaterialPage<T> {
   const _CustomMaterialPage({
     required Widget child,
@@ -88,8 +87,7 @@ class _CustomMaterialPage<T> extends MaterialPage<T> {
             animation: backgroundOpacityAnimation,
             builder: (context, child) {
               return Container(
-                color: Colors.black
-                    .withOpacity(backgroundOpacityAnimation.value),
+                color: Colors.black.withOpacity(backgroundOpacityAnimation.value),
               );
             },
           ),
@@ -99,7 +97,6 @@ class _CustomMaterialPage<T> extends MaterialPage<T> {
     );
   }
 }
-
 
 class _CustomModalBottomSheetRoute<T> extends ModalBottomSheetRoute<T> {
   _CustomModalBottomSheetRoute({
@@ -117,9 +114,7 @@ class _CustomModalBottomSheetRoute<T> extends ModalBottomSheetRoute<T> {
           isDismissible: isDismissible,
         );
 
-  final Widget Function(
-          BuildContext, Animation<double>, Animation<double>, Widget)
-      buildTransition;
+  final Widget Function(BuildContext, Animation<double>, Animation<double>, Widget) buildTransition;
 
   @override
   Widget buildTransitions(

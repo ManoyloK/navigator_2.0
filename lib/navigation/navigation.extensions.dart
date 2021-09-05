@@ -2,9 +2,7 @@ part of 'navigation.dart';
 
 extension NavigationExt on Navigation {
   String get currentPagePath => _navigationStack
-      .map((e) =>
-          e.page.name! +
-          (e.page.arguments != null ? '/${e.page.arguments}' : ''))
+      .map((e) => e.page.name! + (e.page.arguments != null ? '/${e.page.arguments}' : ''))
       .join('');
 
   /// In most of the cases we do not depend on any result from the page we navigate to. If we make it
@@ -43,8 +41,8 @@ extension NavigationExt on Navigation {
             ),
             globalNavigation: navConfig.globalNavigation,
             replace: false,
-            resetNestedNavState: !isLastNavConfig ||
-                isLastNavConfig && resetNestedNavStateOnLastPage,
+            resetNestedNavState:
+                !isLastNavConfig || isLastNavConfig && resetNestedNavStateOnLastPage,
             notifyNavUpdatesStreamListeners: isLastNavConfig,
           );
           break;
@@ -94,8 +92,7 @@ class NavigationConfig {
   }
 
   @override
-  int get hashCode =>
-      action.hashCode ^ pageName.hashCode ^ globalNavigation.hashCode;
+  int get hashCode => action.hashCode ^ pageName.hashCode ^ globalNavigation.hashCode;
 }
 
 enum NavigationAction {

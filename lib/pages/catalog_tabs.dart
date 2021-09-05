@@ -28,12 +28,11 @@ class TabB extends StatelessWidget {
             MaterialButton(
               color: Colors.cyan,
               onPressed: () async {
-                final result =
-                    await Navigation.of(context).navigateForResult<Object>(
+                final result = await Navigation.of(context).navigateForResult<Object>(
                   const PlainPageConfiguration(pageName: PageName.details),
                   globalNavigation: true,
                 );
-                _showSnackBarWithResult(context ,result);
+                _showSnackBarWithResult(context, result);
               },
               child: const Text('Open details from root'),
             ),
@@ -59,13 +58,12 @@ class TabC extends StatelessWidget {
             MaterialButton(
               color: Colors.cyan,
               onPressed: () async {
-                final result =
-                    await Navigation.of(context).navigateForResult<Object>(
+                final result = await Navigation.of(context).navigateForResult<Object>(
                   const PlainPageConfiguration(
                     pageName: PageName.details,
                   ),
                 );
-                _showSnackBarWithResult(context ,result);
+                _showSnackBarWithResult(context, result);
               },
               child: const Text('Open details'),
             ),
@@ -88,6 +86,5 @@ class TabC extends StatelessWidget {
 
 void _showSnackBarWithResult(BuildContext context, Object? result) {
   final resultText = result?.toString() ?? 'No result';
-  ScaffoldMessenger.of(context)
-      .showSnackBar(SnackBar(content: Text(resultText)));
+  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(resultText)));
 }

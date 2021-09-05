@@ -47,15 +47,15 @@ class PageFactory {
         screenName = 'dialog';
         break;
       case PageName.tabA:
-         screen = const TabA();
+        screen = const TabA();
         screenName = 'tabA';
         break;
       case PageName.tabB:
-         screen = const TabB();
+        screen = const TabB();
         screenName = 'tabB';
         break;
       case PageName.tabC:
-         screen = const TabC();
+        screen = const TabC();
         screenName = 'tabC';
         break;
     }
@@ -82,8 +82,7 @@ class PageFactory {
         child: child,
         name: screenName,
         key: ValueKey(screenName),
-        isFullscreenDialog:
-            (pageConfig as PlainPageConfiguration).isFullScreenDialog,
+        isFullscreenDialog: (pageConfig as PlainPageConfiguration).isFullScreenDialog,
       );
     }
   }

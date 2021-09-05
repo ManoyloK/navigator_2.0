@@ -12,8 +12,7 @@ class CatalogPage extends StatefulWidget {
   _CatalogPageState createState() => _CatalogPageState();
 }
 
-class _CatalogPageState extends State<CatalogPage>
-    with SingleTickerProviderStateMixin {
+class _CatalogPageState extends State<CatalogPage> with SingleTickerProviderStateMixin {
   final _tabsNames = <PageName>[
     PageName.tabA,
     PageName.tabB,

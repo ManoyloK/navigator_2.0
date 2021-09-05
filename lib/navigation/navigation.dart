@@ -42,26 +42,23 @@ class Navigation extends ChangeNotifier {
   Stream<NavigationUpdateInfo> get anyInstanceUpdatesStream =>
       _anyInstanceNavUpdateController.stream;
 
-  /// If set to `true` we disable nested navigation. New page will open over current one 
+  /// If set to `true` we disable nested navigation. New page will open over current one
   /// instead of inside it
   bool get oneLevelNavigation => _oneLevelNavigation;
 
   final PageName rootPage;
 
   /// Stack of pages to be shown in [Navigator].
-  List<MaterialPage> get pages => List.unmodifiable(
-      _navInfoList.map<MaterialPage>((navInfo) => navInfo.page));
+  List<MaterialPage> get pages =>
+      List.unmodifiable(_navInfoList.map<MaterialPage>((navInfo) => navInfo.page));
 
   PageName get currentPage => _targetPageNavInfo.pageName;
 
-  Navigation? getActiveNestedNavigation(Page page) =>
-      _pageNestedNavigationsMap[page]?.active;
+  Navigation? getActiveNestedNavigation(Page page) => _pageNestedNavigationsMap[page]?.active;
 
-  List<Navigation>? getAllNestedNavigations(Page page) =>
-      _pageNestedNavigationsMap[page]?.all;
+  List<Navigation>? getAllNestedNavigations(Page page) => _pageNestedNavigationsMap[page]?.all;
 
-  static final _anyInstanceNavUpdateController =
-      StreamController<NavigationUpdateInfo>.broadcast();
+  static final _anyInstanceNavUpdateController = StreamController<NavigationUpdateInfo>.broadcast();
 
   final PageFactory _pageFactory;
   final List<NavigationInfo> _navInfoList;
@@ -76,8 +73,7 @@ class Navigation extends ChangeNotifier {
   final Map<Page, _NestedNavigationState> _pageNestedNavigationsMap = {};
 
   Page get _activePage => _navInfoList.last.page;
-  _NestedNavigationState? get _activeNestedState =>
-      _pageNestedNavigationsMap[_activePage];
+  _NestedNavigationState? get _activeNestedState => _pageNestedNavigationsMap[_activePage];
 
   Navigation? get _activeNestedNavigation => _activeNestedState?.active;
 
@@ -103,15 +99,13 @@ class Navigation extends ChangeNotifier {
   NavigationInfo get _targetPageNavInfo =>
       _activeNestedNavigation?._targetPageNavInfo ?? _navInfoList.last;
 
-
   /// Uses to register nested navigation via [MultiNavigationHostView]
   void registerNestedNavigation(
     PageName rootPage, {
     bool oneLevelNavigation = false,
   }) {
     if (!_pageNestedNavigationsMap.containsKey(_activePage)) {
-      _pageNestedNavigationsMap[_activePage] =
-          _NestedNavigationState(_pageFactory);
+      _pageNestedNavigationsMap[_activePage] = _NestedNavigationState(_pageFactory);
     }
 
     _activeNestedState!.addRootPage(
@@ -120,8 +114,7 @@ class Navigation extends ChangeNotifier {
       oneLevelNavigation: oneLevelNavigation,
     );
 
-    if ((_parent == null ||
-            _parent?._activeNestedNavigation?.rootPage == this.rootPage) &&
+    if ((_parent == null || _parent?._activeNestedNavigation?.rootPage == this.rootPage) &&
         _activeNestedState?.all.length == 1) {
       _notifyNavigationUpdated(_targetPageNavInfo, isNotifyListeners: false);
     }
@@ -140,8 +133,7 @@ class Navigation extends ChangeNotifier {
     Object? result,
     bool notifyNavUpdatesStreamListeners = true,
   }) {
-    if (_activeNestedNavigation != null &&
-        _activeNestedNavigation!.pages.length > 1) {
+    if (_activeNestedNavigation != null && _activeNestedNavigation!.pages.length > 1) {
       _activeNestedNavigation!._pop(result: result);
     } else {
       NavigationInfo? targetPageNavInfo;
@@ -171,8 +163,7 @@ class Navigation extends ChangeNotifier {
         pageConfig is ModalPageConfiguration ||
         (pageConfig is PlainPageConfiguration && pageConfig.isFullScreenDialog);
 
-    final navigateGloballyFromNestedNavigation =
-        navigateGlobally && _parent != null;
+    final navigateGloballyFromNestedNavigation = navigateGlobally && _parent != null;
     if (navigateGloballyFromNestedNavigation) {
       return _parent!.navigateForResult<T>(
         pageConfig,
@@ -183,8 +174,7 @@ class Navigation extends ChangeNotifier {
       );
     }
 
-    if (_avoidNestedNavigation(
-        navigateGlobally, pageConfig, _activeNestedState)) {
+    if (_avoidNestedNavigation(navigateGlobally, pageConfig, _activeNestedState)) {
       return _processInternalPage<T>(
         pageConfig,
         replace,
@@ -234,8 +224,8 @@ class Navigation extends ChangeNotifier {
     }
 
     if (replace || resetNestedNavState) {
-      final samePageIndex = _navInfoList
-          .indexWhere((pageInfo) => pageInfo.page.name == newPage.name);
+      final samePageIndex =
+          _navInfoList.indexWhere((pageInfo) => pageInfo.page.name == newPage.name);
 
       while (_navInfoList.length - 1 > samePageIndex && samePageIndex >= 0) {
         _removeLastPage();
@@ -244,13 +234,11 @@ class Navigation extends ChangeNotifier {
       if (samePageIndex != 0 || replace) {
         _removeLastPage();
       } else {
-        return _updateRootPage<T?>(
-            samePageIndex, notifyNavUpdatesStreamListeners);
+        return _updateRootPage<T?>(samePageIndex, notifyNavUpdatesStreamListeners);
       }
     }
 
-    return _addInternalPage<T>(
-        pageConfig, newPage, notifyNavUpdatesStreamListeners);
+    return _addInternalPage<T>(pageConfig, newPage, notifyNavUpdatesStreamListeners);
   }
 
   Future<T?> _processNestedPage<T>(
@@ -292,8 +280,7 @@ class Navigation extends ChangeNotifier {
     bool notifyNavUpdatesStreamListeners,
   ) {
     final resultCompleter = Completer<T>();
-    _navInfoList
-        .add(NavigationInfo(pageConfig.pageName, newPage, resultCompleter));
+    _navInfoList.add(NavigationInfo(pageConfig.pageName, newPage, resultCompleter));
 
     _notifyNavigationUpdated(
       _targetPageNavInfo,
@@ -330,8 +317,7 @@ class Navigation extends ChangeNotifier {
     }
   }
 
-  Future<T?> _updateRootPage<T>(
-      int samePageIndex, bool notifyNavUpdatesStreamListeners) {
+  Future<T?> _updateRootPage<T>(int samePageIndex, bool notifyNavUpdatesStreamListeners) {
     final navInfo = _navInfoList[samePageIndex];
     _pageNestedNavigationsMap[navInfo.page]?.resetActivePage();
     _notifyNavigationUpdated(
@@ -341,7 +327,6 @@ class Navigation extends ChangeNotifier {
     return navInfo.resultCompleter?.future as Future<T?>;
   }
 }
-
 
 class NavigationInfo {
   const NavigationInfo(

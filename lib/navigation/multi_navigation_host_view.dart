@@ -5,8 +5,7 @@ import 'package:provider/provider.dart';
 import 'index.dart';
 import 'navigation.dart';
 
-typedef ViewBuilder = Widget Function(
-    BuildContext context, List<Widget> children);
+typedef ViewBuilder = Widget Function(BuildContext context, List<Widget> children);
 typedef ActiveViewIndexChanged = void Function(int index);
 
 class MultiNavigationHostView extends StatefulWidget {
@@ -26,8 +25,7 @@ class MultiNavigationHostView extends StatefulWidget {
   final List<PageName> roots;
 
   @override
-  _MultiNavigationHostViewState createState() =>
-      _MultiNavigationHostViewState();
+  _MultiNavigationHostViewState createState() => _MultiNavigationHostViewState();
 }
 
 class _MultiNavigationHostViewState extends State<MultiNavigationHostView> {
@@ -86,8 +84,7 @@ class _MultiNavigationHostViewState extends State<MultiNavigationHostView> {
   }
 
   void _updateActiveViewIndex() {
-    final currentRootPageIndex =
-        widget.roots.indexOf(_activeNestedNavigation!.rootPage);
+    final currentRootPageIndex = widget.roots.indexOf(_activeNestedNavigation!.rootPage);
     widget.activeViewIndexChanged.call(currentRootPageIndex);
   }
 

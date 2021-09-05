@@ -12,8 +12,7 @@ class SingleNavigationHostView extends StatefulWidget {
   final Navigation navigation;
 
   @override
-  _SingleNavigationHostViewState createState() =>
-      _SingleNavigationHostViewState();
+  _SingleNavigationHostViewState createState() => _SingleNavigationHostViewState();
 }
 
 class _SingleNavigationHostViewState extends State<SingleNavigationHostView>

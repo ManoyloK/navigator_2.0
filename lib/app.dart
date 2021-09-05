@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'navigation/index.dart';
 
 class App extends StatelessWidget {
-  const App(this. navigation);
+  const App(this.navigation);
 
-final Navigation navigation;
+  final Navigation navigation;
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

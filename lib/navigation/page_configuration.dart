@@ -16,9 +16,7 @@ abstract class PageConfiguration {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PageConfiguration &&
-        other.pageName == pageName &&
-        other.settings == settings;
+    return other is PageConfiguration && other.pageName == pageName && other.settings == settings;
   }
 
   @override
@@ -77,6 +75,5 @@ class ModalPageConfiguration extends PageConfiguration {
   }
 
   @override
-  int get hashCode =>
-      isDraggable.hashCode ^ isDismissible.hashCode ^ super.hashCode;
+  int get hashCode => isDraggable.hashCode ^ isDismissible.hashCode ^ super.hashCode;
 }

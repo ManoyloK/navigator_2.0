@@ -3,7 +3,7 @@ import 'package:navigator_20/navigation/index.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,7 +17,8 @@ class HomePage extends StatelessWidget {
             MaterialButton(
               color: Colors.cyan,
               onPressed: () {
-                Navigation.of(context).navigate(const PlainPageConfiguration(pageName: PageName.details));
+                Navigation.of(context)
+                    .navigate(const PlainPageConfiguration(pageName: PageName.details));
               },
               child: const Text('Open Details'),
             ),
