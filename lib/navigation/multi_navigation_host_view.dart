@@ -7,20 +7,20 @@ import 'navigation.dart';
 
 typedef ViewBuilder = Widget Function(
     BuildContext context, List<Widget> children);
-typedef ActiveRootViewChanged = void Function(int activeRootIndex);
+typedef ActiveViewIndexChanged = void Function(int index);
 
 class MultiNavigationHostView extends StatefulWidget {
   const MultiNavigationHostView({
     Key? key,
     required this.navigation,
-    required this.activeRootViewChanged,
+    required this.activeViewIndexChanged,
     required this.viewBuilder,
     required this.oneLevelNavigation,
     this.roots = const <PageName>[],
   }) : super(key: key);
 
   final Navigation navigation;
-  final ActiveRootViewChanged activeRootViewChanged;
+  final ActiveViewIndexChanged activeViewIndexChanged;
   final ViewBuilder viewBuilder;
   final bool oneLevelNavigation;
   final List<PageName> roots;
@@ -35,10 +35,12 @@ class _MultiNavigationHostViewState extends State<MultiNavigationHostView> {
   /// navigation and root [Navigation] is updated.
   late Page _nestedNavigationsHostPage;
   Navigation? _activeNestedNavigation;
+  late VoidCallback _onNavigationUpdated;
 
   @override
   void initState() {
     super.initState();
+    _initNavigationUpdatedListener();
 
     _nestedNavigationsHostPage = widget.navigation.pages.last;
     for (final rootPageName in widget.roots) {
@@ -47,42 +49,63 @@ class _MultiNavigationHostViewState extends State<MultiNavigationHostView> {
         oneLevelNavigation: widget.oneLevelNavigation,
       );
     }
+    _activeNestedNavigation =
+        widget.navigation.getActiveNestedNavigation(_nestedNavigationsHostPage);
+    widget.navigation.addListener(_onNavigationUpdated);
+  }
+
+  @override
+  void dispose() {
+    widget.navigation.removeListener(_onNavigationUpdated);
+    super.dispose();
+  }
+
+  void _initNavigationUpdatedListener() {
+    _onNavigationUpdated = () {
+      Log.instance.d(
+        'Multi Nav (${widget.navigation.navigatorKey}) is being updated',
+      );
+
+      if (_updateActiveNestedNavigation()) {
+        setState(() {});
+      }
+    };
+  }
+
+  bool _updateActiveNestedNavigation() {
+    final newNestedNavigation =
+        widget.navigation.getActiveNestedNavigation(_nestedNavigationsHostPage);
+    if (_activeNestedNavigation != newNestedNavigation) {
+      final isRootPageUpdated = _activeNestedNavigation != null;
+      _activeNestedNavigation = newNestedNavigation;
+
+      if (isRootPageUpdated) _updateActiveViewIndex();
+      return true;
+    }
+    return false;
+  }
+
+  void _updateActiveViewIndex() {
+    final currentRootPageIndex =
+        widget.roots.indexOf(_activeNestedNavigation!.rootPage);
+    widget.activeViewIndexChanged.call(currentRootPageIndex);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<Navigation>(
-      builder: (context, navigation, child) {
-        Log.instance.d(
-          'Multi Nav (${navigation.navigatorKey}) is being rebuilt',
-        );
-
-        final activeNestedNavigation =
-            navigation.getActiveNestedNavigation(_nestedNavigationsHostPage);
-        if (_activeNestedNavigation != activeNestedNavigation) {
-          final isRootPageUpdated = _activeNestedNavigation!=null;
-          _activeNestedNavigation = activeNestedNavigation;
-          if(isRootPageUpdated){
-          final currentRootPageIndex =
-              widget.roots.indexOf(_activeNestedNavigation!.rootPage);
-          widget.activeRootViewChanged.call(currentRootPageIndex);
-          }
-        }
-
-        return widget.viewBuilder(
-          context,
-          navigation.getAllNestedNavigations(_nestedNavigationsHostPage)!.map(
-            (nestedNavigation) {
-              return nestedNavigation.oneLevelNavigation
-                  ? nestedNavigation.pages.single.child
-                  : _OffstageNavigator(
-                      navigation: nestedNavigation,
-                      hide: activeNestedNavigation != nestedNavigation,
-                    );
-            },
-          ).toList(),
-        );
-      },
+    return widget.viewBuilder(
+      context,
+      widget.navigation
+          .getAllNestedNavigations(_nestedNavigationsHostPage)!
+          .map(
+            (nestedNavigation) => nestedNavigation.oneLevelNavigation
+                ? nestedNavigation.pages.single.child
+                : _OffstageNavigator(
+                    navigation: nestedNavigation,
+                    hide: _activeNestedNavigation != nestedNavigation,
+                  ),
+          )
+          .toList(),
     );
   }
 }

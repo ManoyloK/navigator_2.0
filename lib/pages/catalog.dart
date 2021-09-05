@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:navigator_20/navigation/index.dart';
 
 class CatalogPage extends StatefulWidget {
@@ -15,14 +14,14 @@ class CatalogPage extends StatefulWidget {
 
 class _CatalogPageState extends State<CatalogPage>
     with SingleTickerProviderStateMixin {
-
-    final _tabsNames = <PageName>[
+  final _tabsNames = <PageName>[
     PageName.tabA,
     PageName.tabB,
     PageName.tabC,
   ];
+
   late TabController _tabController;
-  Object? result;
+
   @override
   void initState() {
     super.initState();
@@ -40,7 +39,6 @@ class _CatalogPageState extends State<CatalogPage>
   void didUpdateWidget(covariant CatalogPage oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (widget.tabIndex != null) {
-      result = null;
       _tabController.animateTo(widget.tabIndex!);
     }
   }
@@ -59,59 +57,37 @@ class _CatalogPageState extends State<CatalogPage>
         title: const Text('Catalog'),
         elevation: 0.0,
       ),
-      backgroundColor: Colors.blue[500],
+      backgroundColor: Colors.blue,
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return [
             SliverToBoxAdapter(
               child: TabBar(
-                onTap: (index) {
-                  result = null;
-                  _openTab(index);
-                },
+                onTap: _openTab,
                 labelPadding: const EdgeInsets.fromLTRB(16.0, 4.0, 16.0, 0.0),
                 indicator: const BoxDecoration(),
                 controller: _tabController,
-                tabs: [
-                  Container(
-                    color: Colors.teal,
-                    height: kToolbarHeight,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'A',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    color: Colors.teal,
-                    height: kToolbarHeight,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'B',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Container(
-                    color: Colors.teal,
-                    height: kToolbarHeight,
-                    alignment: Alignment.center,
-                    child: const Text(
-                      'C',
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
+                tabs: _tabsNames
+                    .map(
+                      (e) => Container(
+                        color: Colors.teal,
+                        height: kToolbarHeight,
+                        alignment: Alignment.center,
+                        child: Text(
+                          e.toString()[e.toString().length - 1],
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
             )
           ];
         },
         body: MultiNavigationHostView(
           navigation: Navigation.of(context),
-          activeRootViewChanged: (index) =>
-              SchedulerBinding.instance!.addPostFrameCallback((_) {
-            setState(() {
-              _tabController.animateTo(index);
-            });
+          activeViewIndexChanged: (index) => setState(() {
+            _tabController.animateTo(index);
           }),
           oneLevelNavigation: true,
           viewBuilder: (context, children) {

@@ -47,7 +47,7 @@ class _RootPageState extends State<RootPage> {
       body: MultiNavigationHostView(
         navigation: Navigation.of(context),
         roots: const [PageName.home, PageName.catalog],
-        activeRootViewChanged: _updatePage,
+        activeViewIndexChanged: _updatePage,
         viewBuilder: (BuildContext context, List<Widget> children) {
           return Stack(
             children: children,
