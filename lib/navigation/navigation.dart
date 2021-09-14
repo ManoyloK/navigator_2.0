@@ -54,9 +54,9 @@ class Navigation extends ChangeNotifier {
 
   PageName get currentPage => _targetPageNavInfo.pageName;
 
-  Navigation? getActiveNestedNavigation(Page page) => _pageNestedNavigationsMap[page]?.active;
+  Navigation? getActiveNestedNavigation(PageName page) => _pageNestedNavigationsMap[page]?.active;
 
-  List<Navigation>? getAllNestedNavigations(Page page) => _pageNestedNavigationsMap[page]?.all;
+  List<Navigation>? getAllNestedNavigations(PageName page) => _pageNestedNavigationsMap[page]?.all;
 
   static final _anyInstanceNavUpdateController = StreamController<NavigationUpdateInfo>.broadcast();
 
@@ -70,9 +70,9 @@ class Navigation extends ChangeNotifier {
   /// was pushed to global navigation. Each page pushed as global we associate
   /// [_NestedNavigationState] which contains information about nested
   /// navigation.
-  final Map<Page, _NestedNavigationState> _pageNestedNavigationsMap = {};
+  final Map<PageName, _NestedNavigationState> _pageNestedNavigationsMap = {};
 
-  Page get _activePage => _navInfoList.last.page;
+  PageName get _activePage => _navInfoList.last.pageName;
   _NestedNavigationState? get _activeNestedState => _pageNestedNavigationsMap[_activePage];
 
   Navigation? get _activeNestedNavigation => _activeNestedState?.active;
@@ -90,7 +90,7 @@ class Navigation extends ChangeNotifier {
       ..._navInfoList.map((navInfo) {
         return [
           navInfo,
-          ...?_pageNestedNavigationsMap[navInfo.page]?.active._navigationStack,
+          ...?_pageNestedNavigationsMap[navInfo.pageName]?.active._navigationStack,
         ];
       }).expand((page) => page)
     ];
@@ -319,7 +319,7 @@ class Navigation extends ChangeNotifier {
 
   Future<T?> _updateRootPage<T>(int samePageIndex, bool notifyNavUpdatesStreamListeners) {
     final navInfo = _navInfoList[samePageIndex];
-    _pageNestedNavigationsMap[navInfo.page]?.resetActivePage();
+    _pageNestedNavigationsMap[navInfo.pageName]?.resetActivePage();
     _notifyNavigationUpdated(
       _targetPageNavInfo,
       notifyNavUpdatesStreamListeners: notifyNavUpdatesStreamListeners,

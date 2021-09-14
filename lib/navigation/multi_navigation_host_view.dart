@@ -31,7 +31,7 @@ class MultiNavigationHostView extends StatefulWidget {
 class _MultiNavigationHostViewState extends State<MultiNavigationHostView> {
   /// Needed to point to the right [Navigation] when new page is pushed as global
   /// navigation and root [Navigation] is updated.
-  late Page _nestedNavigationsHostPage;
+  late PageName _nestedNavigationsHostPage;
   Navigation? _activeNestedNavigation;
   late VoidCallback _onNavigationUpdated;
 
@@ -40,7 +40,7 @@ class _MultiNavigationHostViewState extends State<MultiNavigationHostView> {
     super.initState();
     _initNavigationUpdatedListener();
 
-    _nestedNavigationsHostPage = widget.navigation.pages.last;
+    _nestedNavigationsHostPage = widget.navigation.currentPage;
     for (final rootPageName in widget.roots) {
       widget.navigation.registerNestedNavigation(
         rootPageName,
