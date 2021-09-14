@@ -25,7 +25,7 @@ extension NavigationExt on Navigation {
     );
   }
 
-  /// Allows to do multiple navigation actions without calling redundant rebuid methods
+  /// Allows to do multiple navigation actions without calling redundant rebuild methods
   void navigateMultiplePages(
     List<NavigationConfig> navConfigs, {
     bool resetNestedNavStateOnLastPage = false,

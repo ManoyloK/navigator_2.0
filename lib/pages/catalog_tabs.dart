@@ -69,11 +69,12 @@ class TabC extends StatelessWidget {
             ),
             MaterialButton(
               color: Colors.cyan,
-              onPressed: () {
-                Navigation.of(context).navigate(
+              onPressed: () async {
+               final result = await Navigation.of(context).navigateForResult<Object>(
                   const ModalPageConfiguration(pageName: PageName.dialog),
                   globalNavigation: true,
                 );
+                 _showSnackBarWithResult(context, result);
               },
               child: const Text('Open dialog'),
             ),
